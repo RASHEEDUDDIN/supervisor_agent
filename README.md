@@ -175,4 +175,4 @@ This project directly demonstrates:
 
 ## Author
 
-Rasheeduddin Mohammed (Ghouse) — [github.com/RASHEEDUDDIN](https://github.com/RASHEEDUDDIN)
+Rasheeduddin Mohammed (Rashdev) — [github.com/RASHEEDUDDIN](https://github.com/RASHEEDUDDIN)
