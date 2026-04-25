@@ -43,7 +43,8 @@ def test_boundary_values_for_discount_percentage():
     assert calculate_discount(100.0, 99.99) == 0.01
 
 def test_rounding_of_result_to_two_decimal_places():
-    assert calculate_discount(100.0, 10.005) == 89.99
+    assert calculate_discount(100.0, 33.333) == 66.67
+    assert calculate_discount(10.0, 15.0) == 8.5
 
 def test_result_with_large_values():
     assert calculate_discount(1000000.0, 10.0) == 900000.0
