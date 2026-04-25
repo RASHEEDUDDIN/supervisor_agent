@@ -1,0 +1,21 @@
+# virtual environment — never commit this (50k+ files)
+venv/
+.venv/
+env/
+
+# API keys — never commit these
+.env
+*.env
+secrets.py
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# pytest cache
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
