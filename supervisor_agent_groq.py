@@ -14,6 +14,10 @@ from typing import TypedDict, Literal
 from langgraph.graph import StateGraph, START, END
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
+from langfuse.langchain import CallbackHandler
+
+
+langfuse_handler = CallbackHandler()
 # ─────────────────────────────────────────────
 # 1.  LLM  (free, 315 tokens/sec on Llama 3.3 70B)
 # ─────────────────────────────────────────────
@@ -169,13 +173,10 @@ def calculate_discount(price: float, discount_pct: float) -> float:
 if __name__ == "__main__":
     print("\nStarting pipeline (powered by Groq + Llama 3.3 70B)...\n")
 
-    result = app.invoke({
-        "task":     TASK,
-        "analysis": "",
-        "tests":    "",
-        "next":     "",
-        "steps":    0,
-    })
+    result = app.invoke(
+        {"task": TASK, "analysis": "", "tests": "", "next": "", "steps": 0},
+        config={"callbacks": [langfuse_handler]},
+    )
 
     print("\n" + "=" * 60)
     print("CODE ANALYSIS")
@@ -193,6 +194,6 @@ if __name__ == "__main__":
     with open("test_generated.py", "w") as f:
         # strip the markdown fences Groq sometimes adds
         code = result["tests"].replace("```python", "").replace("```", "").strip()
-        f.write("from supervisor_agent_groq import calculate_discount\n\n")
+        f.write("from discount import calculate_discount\n\n")
         f.write(code)
     print("\nTests saved to test_generated.py")

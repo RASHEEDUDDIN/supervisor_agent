@@ -1,51 +1,53 @@
 import pytest
-from discount import calculate_discount
+from discount import *
 
-def test_valid_numeric_price_with_valid_discount_percentage():
-    assert calculate_discount(100.0, 10.0) == 90.0
+class TestCalculateDiscount:
+    def test_calculate_discount_with_valid_inputs(self):
+        assert calculate_discount(100, 10) == 90.0
 
-def test_non_numeric_price_type():
-    with pytest.raises(TypeError):
-        calculate_discount("string", 10.0)
-    with pytest.raises(TypeError):
-        calculate_discount([1, 2, 3], 10.0)
+    def test_calculate_discount_with_non_numeric_price(self):
+        with pytest.raises(TypeError):
+            calculate_discount('100', 10)
 
-def test_price_as_negative_number():
-    assert calculate_discount(-100.0, 0.0) == -100.0
-    assert calculate_discount(-100.0, 10.0) == -90.0
+    def test_calculate_discount_with_non_numeric_discount_pct(self):
+        with pytest.raises(TypeError):
+            calculate_discount(100, '10')
 
-def test_price_as_zero():
-    assert calculate_discount(0.0, 0.0) == 0.0
-    assert calculate_discount(0.0, 10.0) == 0.0
+    def test_calculate_discount_with_discount_pct_less_than_zero(self):
+        with pytest.raises(ValueError):
+            calculate_discount(100, -10)
 
-def test_discount_percentage_as_zero():
-    assert calculate_discount(100.0, 0.0) == 100.0
+    def test_calculate_discount_with_discount_pct_greater_than_100(self):
+        with pytest.raises(ValueError):
+            calculate_discount(100, 110)
 
-def test_discount_percentage_as_100():
-    assert calculate_discount(100.0, 100.0) == 0.0
+    def test_calculate_discount_with_discount_pct_equal_to_zero(self):
+        assert calculate_discount(100, 0) == 100.0
 
-def test_discount_percentage_as_negative_number():
-    with pytest.raises(ValueError):
-        calculate_discount(100.0, -10.0)
+    def test_calculate_discount_with_discount_pct_equal_to_100(self):
+        assert calculate_discount(100, 100) == 0.0
 
-def test_discount_percentage_as_number_greater_than_100():
-    with pytest.raises(ValueError):
-        calculate_discount(100.0, 110.0)
+    def test_calculate_discount_with_negative_price(self):
+        assert calculate_discount(-100, 10) == -90.0
 
-def test_discount_percentage_as_non_numeric_type():
-    with pytest.raises(TypeError):
-        calculate_discount(100.0, "string")
-    with pytest.raises(TypeError):
-        calculate_discount(100.0, [1, 2, 3])
+    def test_calculate_discount_with_zero_price(self):
+        assert calculate_discount(0, 10) == 0.0
 
-def test_boundary_values_for_discount_percentage():
-    assert calculate_discount(100.0, 0.01) == 99.99
-    assert calculate_discount(100.0, 99.99) == 0.01
+    def test_calculate_discount_with_very_large_price(self):
+        assert calculate_discount(1e10, 10) == 9e9
 
-def test_rounding_of_result_to_two_decimal_places():
-    assert calculate_discount(100.0, 33.333) == 66.67
-    assert calculate_discount(10.0, 15.0) == 8.5
+    def test_calculate_discount_with_very_large_discount_pct(self):
+        with pytest.raises(ValueError):
+            calculate_discount(100, 1e10)
 
-def test_result_with_large_values():
-    assert calculate_discount(1000000.0, 10.0) == 900000.0
-    assert calculate_discount(100.0, 99.99) == 0.01
+    def test_calculate_discount_with_edge_cases_for_rounding(self):
+        assert calculate_discount(0.005, 10) == 0.0
+
+    def test_calculate_discount_with_identical_inputs(self):
+        assert calculate_discount(100, 10) == calculate_discount(100, 10)
+
+    def test_calculate_discount_with_multiple_valid_inputs(self):
+        assert calculate_discount(100, 10) == 90.0
+        assert calculate_discount(200, 20) == 160.0
+        assert calculate_discount(300, 30) == 210.0
+
